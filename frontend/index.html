@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUTEC Procore Tools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="login-container">
+                <div class="login-logo"><i class="fas fa-tools"></i></div>
+                <h1>FLUTEC Quick Tools</h1>
+                <p>Accede a todas las herramientas de Procore</p>
+                <a href="/api/auth/login" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Conectar con Procore
+                </a>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app" class="screen hidden">
+            <aside id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo"><i class="fas fa-tools"></i><span>Quick Tools</span></div>
+                </div>
+                <div class="user-info" id="user-info">
+                    <div class="user-avatar"><i class="fas fa-user"></i></div>
+                    <div class="user-details">
+                        <span class="user-name" id="user-name">Cargando...</span>
+                        <span class="user-email" id="user-email"></span>
+                    </div>
+                </div>
+                <div class="project-selector">
+                    <label>Proyecto:</label>
+                    <select id="project-select"><option value="">Seleccionar...</option></select>
+                </div>
+                <nav class="nav-menu">
+                    <div class="nav-section">
+                        <div class="nav-section-title"><i class="fas fa-cube"></i> Core Tools</div>
+                        <a href="#" class="nav-item active" data-view="home"><i class="fas fa-home"></i><span>Home</span></a>
+                        <a href="#" class="nav-item" data-view="documents"><i class="fas fa-folder"></i><span>Documents</span></a>
+                        <a href="#" class="nav-item" data-view="directory"><i class="fas fa-address-book"></i><span>Directory</span></a>
+                    </div>
+                    <div class="nav-section">
+                        <div class="nav-section-title"><i class="fas fa-hard-hat"></i> Project Management</div>
+                        <a href="#" class="nav-item" data-view="rfis"><i class="fas fa-question-circle"></i><span>RFIs</span><span class="badge" id="badge-rfis">0</span></a>
+                        <a href="#" class="nav-item" data-view="submittals"><i class="fas fa-file-import"></i><span>Submittals</span><span class="badge" id="badge-submittals">0</span></a>
+                        <a href="#" class="nav-item" data-view="punch-list"><i class="fas fa-list-check"></i><span>Punch List</span><span class="badge danger" id="badge-punch">0</span></a>
+                        <a href="#" class="nav-item" data-view="daily-log"><i class="fas fa-clipboard-list"></i><span>Daily Log</span></a>
+                        <a href="#" class="nav-item" data-view="schedule"><i class="fas fa-calendar-alt"></i><span>Schedule</span></a>
+                        <a href="#" class="nav-item" data-view="photos"><i class="fas fa-camera"></i><span>Photos</span></a>
+                        <a href="#" class="nav-item" data-view="drawings"><i class="fas fa-drafting-compass"></i><span>Drawings</span></a>
+                    </div>
+                </nav>
+                <div class="sidebar-footer">
+                    <button id="btn-logout"><i class="fas fa-sign-out-alt"></i><span>Cerrar sesión</span></button>
+                </div>
+            </aside>
+            <main id="content">
+                <div id="view-home" class="view active">
+                    <div class="view-header"><h1><i class="fas fa-home"></i> Dashboard</h1></div>
+                    <div class="dashboard-grid">
+                        <div class="stat-card"><div class="stat-icon rfis"><i class="fas fa-question-circle"></i></div><div class="stat-info"><span class="stat-value" id="stat-rfis">-</span><span class="stat-label">RFIs</span></div></div>
+                        <div class="stat-card"><div class="stat-icon submittals"><i class="fas fa-file-import"></i></div><div class="stat-info"><span class="stat-value" id="stat-submittals">-</span><span class="stat-label">Submittals</span></div></div>
+                        <div class="stat-card"><div class="stat-icon punch"><i class="fas fa-list-check"></i></div><div class="stat-info"><span class="stat-value" id="stat-punch">-</span><span class="stat-label">Punch Items</span></div></div>
+                    </div>
+                </div>
+                <div id="view-rfis" class="view">
+                    <div class="view-header"><h1><i class="fas fa-question-circle"></i> RFIs</h1></div>
+                    <div class="data-table-container">
+                        <table class="data-table"><thead><tr><th>#</th><th>Asunto</th><th>Estado</th><th>Fecha</th></tr></thead>
+                        <tbody id="rfis-table-body"><tr><td colspan="4" class="loading-cell"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr></tbody></table>
+                    </div>
+                </div>
+                <div id="view-submittals" class="view">
+                    <div class="view-header"><h1><i class="fas fa-file-import"></i> Submittals</h1></div>
+                    <div class="data-table-container">
+                        <table class="data-table"><thead><tr><th>#</th><th>Título</th><th>Estado</th><th>Fecha</th></tr></thead>
+                        <tbody id="submittals-table-body"><tr><td colspan="4" class="loading-cell"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr></tbody></table>
+                    </div>
+                </div>
+                <div id="view-punch-list" class="view">
+                    <div class="view-header"><h1><i class="fas fa-list-check"></i> Punch List</h1></div>
+                    <div id="punch-grid" class="punch-grid"><div class="loading-cell"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
+                </div>
+                <div id="view-generic" class="view">
+                    <div class="view-header"><h1 id="generic-title"><i class="fas fa-tools"></i> Herramienta</h1></div>
+                    <div class="coming-soon"><i class="fas fa-hard-hat"></i><h2>En Construcción</h2></div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
