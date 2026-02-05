@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://us02.api.procore.com/rest/v1.0/projects/${project_id}/rfis`,
+      `https://api.procore.com/rest/v1.0/projects/${project_id}/rfis`,
       { 
         headers: { 
           'Authorization': `Bearer ${token}`,
