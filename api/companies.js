@@ -6,13 +6,20 @@ module.exports = async (req, res) => {
   if (!token) {
     return res.status(401).json({ error: 'No token' });
   }
-  
+
   try {
     const response = await axios.get('https://api.procore.com/rest/v1.0/companies', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.message });
+    console.error('Companies error:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.message || error.message,
+      details: error.response?.data
+    });
   }
 };
