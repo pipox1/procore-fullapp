@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Obtener la lista de compañías primero
+    // Primero obtener el company_id
     const companiesRes = await axios.get(
       'https://api.procore.com/rest/v1.0/companies',
       { 
@@ -18,16 +18,12 @@ module.exports = async (req, res) => {
       }
     );
     
-    // El ID real está en la respuesta - necesitamos el ID largo
-    const company = companiesRes.data[0];
-    console.log('Company full data:', JSON.stringify(company));
-    
-    // Probar con el ID de la compañía
-    const companyId = company.id;
-    console.log('Using company_id:', companyId);
+    const companyId = companiesRes.data[0].id;
+    console.log('Company ID:', companyId);
 
+    // Usar v1.0 con company_id como query parameter
     const response = await axios.get(
-      `https://api.procore.com/rest/v1.1/companies/${companyId}/projects`,
+      `https://api.procore.com/rest/v1.0/projects?company_id=${companyId}`,
       { 
         headers: { 
           'Authorization': `Bearer ${token}`
@@ -46,5 +42,3 @@ module.exports = async (req, res) => {
     });
   }
 };
-
-
