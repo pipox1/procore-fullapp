@@ -9,21 +9,19 @@ module.exports = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.procore.com/rest/v1.0/projects/${project_id}/punch_items`,
+      `https://us02.api.procore.com/rest/v1.0/projects/${project_id}/punch_items`,
       { 
         headers: { 
           'Authorization': `Bearer ${token}`,
-          'Procore-Company-Id': company_id,
-          'Content-Type': 'application/json'
+          'Procore-Company-Id': company_id
         }
       }
     );
     res.json(response.data);
   } catch (error) {
-    console.error('Punch list error:', error.response?.data || error.message);
+    console.error('Punch error:', error.response?.data || error.message);
     res.status(error.response?.status || 500).json({ 
-      error: error.response?.data?.message || error.message,
-      details: error.response?.data
+      error: error.response?.data?.message || error.message
     });
   }
 };
