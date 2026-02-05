@@ -29,6 +29,8 @@
         .project-select label{display:block;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px}
         .project-select select{width:100%;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;font-size:12px}
         .project-select select option{background:#1a1a2e}
+        .current-project{background:rgba(244,126,66,0.2);border:1px solid #F47E42;padding:10px;border-radius:8px;margin-bottom:15px;font-size:11px}
+        .current-project strong{color:#F47E42}
         .nav-section{margin-bottom:15px}
         .nav-title{font-size:10px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;padding-left:10px}
         .nav-item{display:flex;align-items:center;gap:10px;padding:10px;color:rgba(255,255,255,0.8);border-radius:8px;margin-bottom:3px;cursor:pointer;font-size:13px}
@@ -61,7 +63,8 @@
         .loading{text-align:center;padding:30px;color:#718096}
         .view{display:none}
         .view.active{display:block}
-        .error-msg{background:#fed7d7;color:#c53030;padding:15px;border-radius:8px;margin-bottom:15px}
+        .error-msg{background:#fed7d7;color:#c53030;padding:15px;border-radius:8px;margin-bottom:15px;font-size:13px}
+        .info-msg{background:#bee3f8;color:#2b6cb0;padding:15px;border-radius:8px;margin-bottom:15px;font-size:13px}
     </style>
 </head>
 <body>
@@ -80,8 +83,12 @@
                 <div class="user-name" id="user-name">Cargando...</div>
                 <div class="user-email" id="user-email"></div>
             </div>
+            <div class="current-project" id="current-project-info">
+                <strong>Proyecto Actual:</strong><br>
+                <span id="auto-project-name">Detectando...</span>
+            </div>
             <div class="project-select">
-                <label>Proyecto Actual</label>
+                <label>Cambiar Proyecto</label>
                 <select id="project-select" onchange="selectProject(this.value)">
                     <option value="">Cargando proyectos...</option>
                 </select>
@@ -111,28 +118,73 @@
                     <div class="stat-card punch" onclick="showView('punch')"><h3 id="stat-punch">-</h3><p><i class="fas fa-list-check"></i> Punch Items</p></div>
                 </div>
                 <div class="data-section">
-                    <p id="project-info">Selecciona un proyecto para ver los datos.</p>
+                    <p id="project-info">Cargando información del proyecto...</p>
                     <p id="debug-info" style="margin-top:10px;font-size:11px;color:#999;"></p>
                 </div>
             </div>
             <div id="view-rfis" class="view">
-                <div class="page-header"><h1><i class="fas fa-question-circle"></i> RFIs</h1><button class="btn-refresh" onclick="loadRFIs()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="page-header"><h1><i class="fas fa-question-circle"></i> RFIs</h1><button class="btn-refresh" onclick="loadRFIs()"><i class="fas fa-sync-alt"></i></button></div>
                 <div class="data-section"><div id="rfis-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
             </div>
             <div id="view-submittals" class="view">
-                <div class="page-header"><h1><i class="fas fa-file-import"></i> Submittals</h1><button class="btn-refresh" onclick="loadSubmittals()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="page-header"><h1><i class="fas fa-file-import"></i> Submittals</h1><button class="btn-refresh" onclick="loadSubmittals()"><i class="fas fa-sync-alt"></i></button></div>
                 <div class="data-section"><div id="submittals-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
             </div>
             <div id="view-punch" class="view">
-                <div class="page-header"><h1><i class="fas fa-list-check"></i> Punch List</h1><button class="btn-refresh" onclick="loadPunchList()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="page-header"><h1><i class="fas fa-list-check"></i> Punch List</h1><button class="btn-refresh" onclick="loadPunchList()"><i class="fas fa-sync-alt"></i></button></div>
                 <div class="data-section"><div id="punch-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
             </div>
         </main>
     </div>
     <script>
-        let APP = { token: null, companies: [], projects: [], currentCompany: null, currentProject: null };
+        let APP = { 
+            token: null, 
+            companies: [], 
+            projects: [], 
+            currentCompany: null, 
+            currentProject: null,
+            urlProjectId: null,
+            urlCompanyId: null
+        };
         
-        document.addEventListener('DOMContentLoaded', checkAuth);
+        document.addEventListener('DOMContentLoaded', function() {
+            extractProcoreContext();
+            checkAuth();
+        });
+        
+        // Extraer project_id y company_id de la URL de Procore
+        function extractProcoreContext() {
+            try {
+                // Intentar obtener de la URL del padre (iframe en Procore)
+                let url = '';
+                try { url = window.parent.location.href; } catch(e) { url = document.referrer; }
+                
+                console.log('URL detectada:', url);
+                
+                // Extraer project_id de la URL
+                // Formato: /562949955210139/project/apps/...
+                let projectMatch = url.match(/\/(\d{15,})\/project/);
+                if (projectMatch) {
+                    APP.urlProjectId = projectMatch[1];
+                    console.log('Project ID desde URL:', APP.urlProjectId);
+                }
+                
+                // Formato alternativo: /projects/562949955210139/
+                if (!APP.urlProjectId) {
+                    projectMatch = url.match(/projects\/(\d+)/);
+                    if (projectMatch) APP.urlProjectId = projectMatch[1];
+                }
+                
+                // Extraer company_id
+                let companyMatch = url.match(/companies\/(\d+)/);
+                if (companyMatch) {
+                    APP.urlCompanyId = companyMatch[1];
+                }
+                
+            } catch (e) {
+                console.log('No se pudo extraer contexto:', e);
+            }
+        }
         
         function checkAuth() {
             const params = new URLSearchParams(window.location.search);
@@ -176,27 +228,36 @@
         }
         
         function showError(msg) {
-            document.getElementById('error-container').innerHTML = '<div class="error-msg">' + msg + '</div>';
+            document.getElementById('error-container').innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> ' + msg + '</div>';
+        }
+        
+        function showInfo(msg) {
+            document.getElementById('error-container').innerHTML = '<div class="info-msg"><i class="fas fa-info-circle"></i> ' + msg + '</div>';
         }
         
         async function apiCall(endpoint, params = {}) {
             const qs = new URLSearchParams(params).toString();
             const url = '/api/' + endpoint + (qs ? '?' + qs : '');
+            console.log('API Call:', url);
             const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + APP.token } });
             if (res.status === 401) { logout(); throw new Error('Session expired'); }
             const data = await res.json();
+            console.log('API Response:', endpoint, data);
             if (data.error) throw new Error(data.error);
             return data;
         }
         
         async function loadInitialData() {
             try {
+                // Cargar usuario
                 const user = await apiCall('me');
                 document.getElementById('user-name').textContent = user.name || 'Usuario';
                 document.getElementById('user-email').textContent = user.login || '';
-                document.getElementById('debug-info').textContent = 'Conectado: ' + (user.login || '');
                 
+                // Cargar compañías
                 APP.companies = await apiCall('companies');
+                console.log('Compañías:', APP.companies);
+                
                 if (APP.companies.length > 0) {
                     APP.currentCompany = APP.companies[0];
                     await loadProjects();
@@ -204,96 +265,151 @@
                     showError('No tienes acceso a ninguna compañía.');
                 }
             } catch (e) {
-                console.error(e);
-                document.getElementById('debug-info').textContent = 'Error: ' + e.message;
+                console.error('Error inicial:', e);
+                showError('Error al cargar datos: ' + e.message);
             }
         }
         
         async function loadProjects() {
             try {
                 APP.projects = await apiCall('projects', { company_id: APP.currentCompany.id });
+                console.log('Proyectos:', APP.projects);
+                
                 const select = document.getElementById('project-select');
-                select.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+                select.innerHTML = '<option value="">-- Todos los proyectos --</option>';
+                
                 APP.projects.forEach(p => {
-                    select.innerHTML += '<option value="' + p.id + '">' + p.name + '</option>';
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.name;
+                    select.appendChild(option);
                 });
+                
+                // Auto-seleccionar proyecto basado en URL de Procore
+                if (APP.urlProjectId) {
+                    const matchingProject = APP.projects.find(p => p.id == APP.urlProjectId);
+                    if (matchingProject) {
+                        select.value = matchingProject.id;
+                        document.getElementById('auto-project-name').textContent = matchingProject.name;
+                        selectProject(matchingProject.id);
+                        showInfo('Proyecto detectado automáticamente: ' + matchingProject.name);
+                        return;
+                    }
+                }
+                
+                // Si no se detectó, seleccionar el primero
                 if (APP.projects.length > 0) {
                     select.value = APP.projects[0].id;
+                    document.getElementById('auto-project-name').textContent = APP.projects[0].name;
                     selectProject(APP.projects[0].id);
+                } else {
+                    document.getElementById('auto-project-name').textContent = 'Sin proyectos';
                 }
+                
             } catch (e) {
-                console.error(e);
+                console.error('Error proyectos:', e);
                 document.getElementById('debug-info').textContent = 'Error proyectos: ' + e.message;
+                
+                // Si falla la carga de proyectos, intentar usar el project_id de la URL directamente
+                if (APP.urlProjectId) {
+                    APP.currentProject = { id: APP.urlProjectId, name: 'Proyecto ' + APP.urlProjectId };
+                    document.getElementById('auto-project-name').textContent = 'ID: ' + APP.urlProjectId;
+                    document.getElementById('project-select').innerHTML = '<option value="' + APP.urlProjectId + '">Proyecto Actual</option>';
+                    loadProjectData();
+                }
             }
         }
         
         function selectProject(id) {
             if (!id) return;
-            APP.currentProject = APP.projects.find(p => p.id == id);
-            document.getElementById('project-info').textContent = 'Proyecto: ' + APP.currentProject.name;
+            APP.currentProject = APP.projects.find(p => p.id == id) || { id: id, name: 'Proyecto ' + id };
+            document.getElementById('project-info').textContent = 'Proyecto: ' + (APP.currentProject.name || id);
+            document.getElementById('auto-project-name').textContent = APP.currentProject.name || id;
             loadProjectData();
         }
         
         async function loadProjectData() {
-            if (!APP.currentProject || !APP.currentCompany) return;
-            const params = { project_id: APP.currentProject.id, company_id: APP.currentCompany.id };
+            if (!APP.currentProject) return;
+            
+            const companyId = APP.currentCompany?.id || APP.urlCompanyId || APP.companies[0]?.id;
+            const params = { project_id: APP.currentProject.id, company_id: companyId };
+            
+            document.getElementById('error-container').innerHTML = '';
+            
+            // RFIs
             try {
                 const rfis = await apiCall('rfis', params);
                 const count1 = Array.isArray(rfis) ? rfis.length : 0;
                 document.getElementById('stat-rfis').textContent = count1;
                 document.getElementById('badge-rfis').textContent = count1;
-            } catch (e) { document.getElementById('stat-rfis').textContent = 'E'; }
+            } catch (e) { 
+                document.getElementById('stat-rfis').textContent = '-';
+                console.error('Error RFIs:', e);
+            }
+            
+            // Submittals
             try {
                 const subs = await apiCall('submittals', params);
                 const count2 = Array.isArray(subs) ? subs.length : 0;
                 document.getElementById('stat-submittals').textContent = count2;
                 document.getElementById('badge-submittals').textContent = count2;
-            } catch (e) { document.getElementById('stat-submittals').textContent = 'E'; }
+            } catch (e) { 
+                document.getElementById('stat-submittals').textContent = '-';
+                console.error('Error Submittals:', e);
+            }
+            
+            // Punch List
             try {
                 const punch = await apiCall('punch-list', params);
                 const count3 = Array.isArray(punch) ? punch.length : 0;
                 document.getElementById('stat-punch').textContent = count3;
                 document.getElementById('badge-punch').textContent = count3;
-            } catch (e) { document.getElementById('stat-punch').textContent = 'E'; }
+            } catch (e) { 
+                document.getElementById('stat-punch').textContent = '-';
+                console.error('Error Punch:', e);
+            }
         }
         
         async function loadRFIs() {
             if (!APP.currentProject) { document.getElementById('rfis-content').innerHTML = 'Selecciona proyecto.'; return; }
-            document.getElementById('rfis-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            document.getElementById('rfis-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
             try {
-                const data = await apiCall('rfis', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
-                if (!Array.isArray(data) || data.length === 0) { document.getElementById('rfis-content').innerHTML = 'No hay RFIs.'; return; }
+                const companyId = APP.currentCompany?.id || APP.companies[0]?.id;
+                const data = await apiCall('rfis', { project_id: APP.currentProject.id, company_id: companyId });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('rfis-content').innerHTML = '<p>No hay RFIs en este proyecto.</p>'; return; }
                 let html = '<table class="data-table"><thead><tr><th>#</th><th>Asunto</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>';
-                data.forEach(r => { html += '<tr><td>' + (r.number||r.id) + '</td><td>' + (r.subject||'-') + '</td><td><span class="status-badge status-open">' + (r.status||'Abierto') + '</span></td><td>' + (r.created_at?.substring(0,10)||'-') + '</td></tr>'; });
+                data.forEach(r => { html += '<tr><td><strong>' + (r.number||r.id) + '</strong></td><td>' + (r.subject||'-') + '</td><td><span class="status-badge status-open">' + (r.status||'Abierto') + '</span></td><td>' + (r.created_at?.substring(0,10)||'-') + '</td></tr>'; });
                 html += '</tbody></table>';
                 document.getElementById('rfis-content').innerHTML = html;
-            } catch (e) { document.getElementById('rfis-content').innerHTML = 'Error: ' + e.message; }
+            } catch (e) { document.getElementById('rfis-content').innerHTML = '<p class="error-msg">Error: ' + e.message + '</p>'; }
         }
         
         async function loadSubmittals() {
             if (!APP.currentProject) { document.getElementById('submittals-content').innerHTML = 'Selecciona proyecto.'; return; }
-            document.getElementById('submittals-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            document.getElementById('submittals-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
             try {
-                const data = await apiCall('submittals', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
-                if (!Array.isArray(data) || data.length === 0) { document.getElementById('submittals-content').innerHTML = 'No hay Submittals.'; return; }
+                const companyId = APP.currentCompany?.id || APP.companies[0]?.id;
+                const data = await apiCall('submittals', { project_id: APP.currentProject.id, company_id: companyId });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('submittals-content').innerHTML = '<p>No hay Submittals en este proyecto.</p>'; return; }
                 let html = '<table class="data-table"><thead><tr><th>#</th><th>Título</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>';
-                data.forEach(s => { html += '<tr><td>' + (s.number||s.id) + '</td><td>' + (s.title||'-') + '</td><td><span class="status-badge">' + (s.status?.name||'Pendiente') + '</span></td><td>' + (s.created_at?.substring(0,10)||'-') + '</td></tr>'; });
+                data.forEach(s => { html += '<tr><td><strong>' + (s.number||s.id) + '</strong></td><td>' + (s.title||'-') + '</td><td><span class="status-badge">' + (s.status?.name||'Pendiente') + '</span></td><td>' + (s.created_at?.substring(0,10)||'-') + '</td></tr>'; });
                 html += '</tbody></table>';
                 document.getElementById('submittals-content').innerHTML = html;
-            } catch (e) { document.getElementById('submittals-content').innerHTML = 'Error: ' + e.message; }
+            } catch (e) { document.getElementById('submittals-content').innerHTML = '<p class="error-msg">Error: ' + e.message + '</p>'; }
         }
         
         async function loadPunchList() {
             if (!APP.currentProject) { document.getElementById('punch-content').innerHTML = 'Selecciona proyecto.'; return; }
-            document.getElementById('punch-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            document.getElementById('punch-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
             try {
-                const data = await apiCall('punch-list', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
-                if (!Array.isArray(data) || data.length === 0) { document.getElementById('punch-content').innerHTML = 'No hay Punch Items.'; return; }
+                const companyId = APP.currentCompany?.id || APP.companies[0]?.id;
+                const data = await apiCall('punch-list', { project_id: APP.currentProject.id, company_id: companyId });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('punch-content').innerHTML = '<p>No hay Punch Items en este proyecto.</p>'; return; }
                 let html = '<table class="data-table"><thead><tr><th>#</th><th>Descripción</th><th>Estado</th><th>Ubicación</th></tr></thead><tbody>';
-                data.forEach(p => { html += '<tr><td>' + (p.number||p.id) + '</td><td>' + (p.name||p.description||'-') + '</td><td><span class="status-badge status-open">' + (p.status||'Abierto') + '</span></td><td>' + (p.location?.name||'-') + '</td></tr>'; });
+                data.forEach(p => { html += '<tr><td><strong>' + (p.number||p.id) + '</strong></td><td>' + (p.name||p.description||'-') + '</td><td><span class="status-badge status-open">' + (p.status||'Abierto') + '</span></td><td>' + (p.location?.name||'-') + '</td></tr>'; });
                 html += '</tbody></table>';
                 document.getElementById('punch-content').innerHTML = html;
-            } catch (e) { document.getElementById('punch-content').innerHTML = 'Error: ' + e.message; }
+            } catch (e) { document.getElementById('punch-content').innerHTML = '<p class="error-msg">Error: ' + e.message + '</p>'; }
         }
     </script>
 </body>
