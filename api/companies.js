@@ -8,16 +8,18 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const response = await axios.get('https://us02.api.procore.com/rest/v1.0/companies', {
+    const response = await axios.get('https://api.procore.com/rest/v1.0/companies', {
       headers: { 
         'Authorization': `Bearer ${token}`
       }
     });
+    console.log('Companies response:', response.data);
     res.json(response.data);
   } catch (error) {
     console.error('Companies error:', error.response?.data || error.message);
     res.status(error.response?.status || 500).json({ 
-      error: error.response?.data?.message || error.message
+      error: error.response?.data?.message || error.message,
+      details: error.response?.data
     });
   }
 };
