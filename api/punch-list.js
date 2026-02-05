@@ -5,7 +5,9 @@ module.exports = async (req, res) => {
   const { project_id, company_id } = req.query;
 
   if (!token) return res.status(401).json({ error: 'No token' });
-  if (!project_id || !company_id) return res.status(400).json({ error: 'project_id and company_id required' });
+  if (!project_id || !company_id) {
+    return res.status(400).json({ error: 'project_id and company_id required' });
+  }
 
   try {
     const response = await axios.get(
@@ -13,13 +15,13 @@ module.exports = async (req, res) => {
       { 
         headers: { 
           'Authorization': `Bearer ${token}`,
-          'Procore-Company-Id': company_id
+          'Procore-Company-Id': String(company_id)
         }
       }
     );
     res.json(response.data);
   } catch (error) {
-    console.error('Punch error:', error.response?.data || error.message);
+    console.error('Punch error:', error.response?.data);
     res.status(error.response?.status || 500).json({ 
       error: error.response?.data?.message || error.message
     });
