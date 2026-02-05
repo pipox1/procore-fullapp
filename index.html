@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUTEC Procore Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#f5f7fa;min-height:100vh}
+        .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a1a2e,#16213e)}
+        .login-container{text-align:center;padding:60px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:400px}
+        .login-logo{width:80px;height:80px;background:linear-gradient(135deg,#F47E42,#E56A2E);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+        .login-logo i{font-size:36px;color:#fff}
+        .login-container h1{font-size:28px;margin-bottom:12px;color:#2d3748}
+        .login-container p{color:#718096;margin-bottom:32px}
+        .btn-login{display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:linear-gradient(135deg,#F47E42,#E56A2E);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:600}
+        .app-container{display:none;min-height:100vh}
+        .app-container.active{display:flex}
+        .sidebar{width:280px;background:linear-gradient(180deg,#1a1a2e,#16213e);color:#fff;padding:20px;position:fixed;height:100vh;overflow-y:auto}
+        .sidebar-logo{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .sidebar-logo i{font-size:24px;color:#F47E42}
+        .sidebar-logo span{font-size:18px;font-weight:700;color:#F47E42}
+        .user-info{background:rgba(255,255,255,0.05);padding:12px;border-radius:10px;margin-bottom:15px}
+        .user-name{font-weight:600;font-size:13px}
+        .user-email{font-size:11px;color:rgba(255,255,255,0.6)}
+        .project-select{margin-bottom:20px}
+        .project-select label{display:block;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px}
+        .project-select select{width:100%;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;font-size:12px}
+        .project-select select option{background:#1a1a2e}
+        .nav-section{margin-bottom:15px}
+        .nav-title{font-size:10px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;padding-left:10px}
+        .nav-item{display:flex;align-items:center;gap:10px;padding:10px;color:rgba(255,255,255,0.8);border-radius:8px;margin-bottom:3px;cursor:pointer;font-size:13px}
+        .nav-item:hover{background:rgba(244,126,66,0.2)}
+        .nav-item.active{background:rgba(244,126,66,0.3);color:#F47E42}
+        .nav-item i{width:18px;text-align:center;font-size:14px}
+        .nav-item .badge{background:#F47E42;color:#fff;font-size:10px;padding:2px 6px;border-radius:8px;margin-left:auto}
+        .btn-logout{display:flex;align-items:center;gap:8px;width:100%;padding:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:12px;margin-top:15px}
+        .btn-logout:hover{background:rgba(245,101,101,0.2);color:#f56565}
+        .main-content{margin-left:280px;padding:25px;flex:1}
+        .page-header{margin-bottom:25px;display:flex;justify-content:space-between;align-items:center}
+        .page-header h1{font-size:24px;color:#2d3748;display:flex;align-items:center;gap:10px}
+        .page-header h1 i{color:#F47E42}
+        .btn-refresh{padding:8px 16px;background:#F47E42;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px}
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px}
+        .stat-card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);cursor:pointer;transition:all 0.2s}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+        .stat-card h3{font-size:32px;color:#2d3748;margin-bottom:5px}
+        .stat-card p{color:#718096;font-size:13px}
+        .stat-card.rfis{border-left:4px solid #F47E42}
+        .stat-card.submittals{border-left:4px solid #4299e1}
+        .stat-card.punch{border-left:4px solid #f56565}
+        .data-section{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th{text-align:left;padding:10px;background:#f5f7fa;font-size:11px;text-transform:uppercase;color:#718096}
+        .data-table td{padding:10px;border-bottom:1px solid #e2e8f0;font-size:13px}
+        .status-badge{padding:3px 10px;border-radius:15px;font-size:11px}
+        .status-open{background:#fed7d7;color:#c53030}
+        .status-closed{background:#c6f6d5;color:#276749}
+        .loading{text-align:center;padding:30px;color:#718096}
+        .view{display:none}
+        .view.active{display:block}
+        .error-msg{background:#fed7d7;color:#c53030;padding:15px;border-radius:8px;margin-bottom:15px}
+    </style>
+</head>
+<body>
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo"><i class="fas fa-tools"></i></div>
+            <h1>FLUTEC Quick Tools</h1>
+            <p>Accede a todas las herramientas de Procore</p>
+            <a href="/api/auth/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> Conectar con Procore</a>
+        </div>
+    </div>
+    <div id="app-container" class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo"><i class="fas fa-tools"></i><span>Quick Tools</span></div>
+            <div class="user-info">
+                <div class="user-name" id="user-name">Cargando...</div>
+                <div class="user-email" id="user-email"></div>
+            </div>
+            <div class="project-select">
+                <label>Proyecto Actual</label>
+                <select id="project-select" onchange="selectProject(this.value)">
+                    <option value="">Cargando proyectos...</option>
+                </select>
+            </div>
+            <div class="nav-section">
+                <div class="nav-title">Dashboard</div>
+                <div class="nav-item active" onclick="showView('home')"><i class="fas fa-home"></i> Home</div>
+            </div>
+            <div class="nav-section">
+                <div class="nav-title">Project Management</div>
+                <div class="nav-item" onclick="showView('rfis')"><i class="fas fa-question-circle"></i> RFIs <span class="badge" id="badge-rfis">0</span></div>
+                <div class="nav-item" onclick="showView('submittals')"><i class="fas fa-file-import"></i> Submittals <span class="badge" id="badge-submittals">0</span></div>
+                <div class="nav-item" onclick="showView('punch')"><i class="fas fa-list-check"></i> Punch List <span class="badge" id="badge-punch">0</span></div>
+            </div>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
+        </aside>
+        <main class="main-content">
+            <div id="view-home" class="view active">
+                <div class="page-header">
+                    <h1><i class="fas fa-home"></i> Dashboard</h1>
+                    <button class="btn-refresh" onclick="loadProjectData()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+                <div id="error-container"></div>
+                <div class="stats-grid">
+                    <div class="stat-card rfis" onclick="showView('rfis')"><h3 id="stat-rfis">-</h3><p><i class="fas fa-question-circle"></i> RFIs</p></div>
+                    <div class="stat-card submittals" onclick="showView('submittals')"><h3 id="stat-submittals">-</h3><p><i class="fas fa-file-import"></i> Submittals</p></div>
+                    <div class="stat-card punch" onclick="showView('punch')"><h3 id="stat-punch">-</h3><p><i class="fas fa-list-check"></i> Punch Items</p></div>
+                </div>
+                <div class="data-section">
+                    <p id="project-info">Selecciona un proyecto para ver los datos.</p>
+                    <p id="debug-info" style="margin-top:10px;font-size:11px;color:#999;"></p>
+                </div>
+            </div>
+            <div id="view-rfis" class="view">
+                <div class="page-header"><h1><i class="fas fa-question-circle"></i> RFIs</h1><button class="btn-refresh" onclick="loadRFIs()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="data-section"><div id="rfis-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
+            </div>
+            <div id="view-submittals" class="view">
+                <div class="page-header"><h1><i class="fas fa-file-import"></i> Submittals</h1><button class="btn-refresh" onclick="loadSubmittals()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="data-section"><div id="submittals-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
+            </div>
+            <div id="view-punch" class="view">
+                <div class="page-header"><h1><i class="fas fa-list-check"></i> Punch List</h1><button class="btn-refresh" onclick="loadPunchList()"><i class="fas fa-sync-alt"></i> Actualizar</button></div>
+                <div class="data-section"><div id="punch-content" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
+            </div>
+        </main>
+    </div>
+    <script>
+        let APP = { token: null, companies: [], projects: [], currentCompany: null, currentProject: null };
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
+        
+        function checkAuth() {
+            const params = new URLSearchParams(window.location.search);
+            const tokenFromUrl = params.get('token');
+            if (tokenFromUrl) {
+                APP.token = tokenFromUrl;
+                localStorage.setItem('procore_token', tokenFromUrl);
+                window.history.replaceState({}, '', window.location.pathname);
+                showApp();
+                loadInitialData();
+            } else {
+                APP.token = localStorage.getItem('procore_token');
+                if (APP.token) { showApp(); loadInitialData(); } 
+                else { showLogin(); }
+            }
+        }
+        
+        function showLogin() {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app-container').classList.remove('active');
+        }
+        
+        function showApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').classList.add('active');
+        }
+        
+        function logout() {
+            localStorage.removeItem('procore_token');
+            showLogin();
+        }
+        
+        function showView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('view-' + name).classList.add('active');
+            if (event && event.target) event.target.closest('.nav-item')?.classList.add('active');
+            if (name === 'rfis') loadRFIs();
+            if (name === 'submittals') loadSubmittals();
+            if (name === 'punch') loadPunchList();
+        }
+        
+        function showError(msg) {
+            document.getElementById('error-container').innerHTML = '<div class="error-msg">' + msg + '</div>';
+        }
+        
+        async function apiCall(endpoint, params = {}) {
+            const qs = new URLSearchParams(params).toString();
+            const url = '/api/' + endpoint + (qs ? '?' + qs : '');
+            const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + APP.token } });
+            if (res.status === 401) { logout(); throw new Error('Session expired'); }
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            return data;
+        }
+        
+        async function loadInitialData() {
+            try {
+                const user = await apiCall('me');
+                document.getElementById('user-name').textContent = user.name || 'Usuario';
+                document.getElementById('user-email').textContent = user.login || '';
+                document.getElementById('debug-info').textContent = 'Conectado: ' + (user.login || '');
+                
+                APP.companies = await apiCall('companies');
+                if (APP.companies.length > 0) {
+                    APP.currentCompany = APP.companies[0];
+                    await loadProjects();
+                } else {
+                    showError('No tienes acceso a ninguna compañía.');
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById('debug-info').textContent = 'Error: ' + e.message;
+            }
+        }
+        
+        async function loadProjects() {
+            try {
+                APP.projects = await apiCall('projects', { company_id: APP.currentCompany.id });
+                const select = document.getElementById('project-select');
+                select.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+                APP.projects.forEach(p => {
+                    select.innerHTML += '<option value="' + p.id + '">' + p.name + '</option>';
+                });
+                if (APP.projects.length > 0) {
+                    select.value = APP.projects[0].id;
+                    selectProject(APP.projects[0].id);
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById('debug-info').textContent = 'Error proyectos: ' + e.message;
+            }
+        }
+        
+        function selectProject(id) {
+            if (!id) return;
+            APP.currentProject = APP.projects.find(p => p.id == id);
+            document.getElementById('project-info').textContent = 'Proyecto: ' + APP.currentProject.name;
+            loadProjectData();
+        }
+        
+        async function loadProjectData() {
+            if (!APP.currentProject || !APP.currentCompany) return;
+            const params = { project_id: APP.currentProject.id, company_id: APP.currentCompany.id };
+            try {
+                const rfis = await apiCall('rfis', params);
+                const count1 = Array.isArray(rfis) ? rfis.length : 0;
+                document.getElementById('stat-rfis').textContent = count1;
+                document.getElementById('badge-rfis').textContent = count1;
+            } catch (e) { document.getElementById('stat-rfis').textContent = 'E'; }
+            try {
+                const subs = await apiCall('submittals', params);
+                const count2 = Array.isArray(subs) ? subs.length : 0;
+                document.getElementById('stat-submittals').textContent = count2;
+                document.getElementById('badge-submittals').textContent = count2;
+            } catch (e) { document.getElementById('stat-submittals').textContent = 'E'; }
+            try {
+                const punch = await apiCall('punch-list', params);
+                const count3 = Array.isArray(punch) ? punch.length : 0;
+                document.getElementById('stat-punch').textContent = count3;
+                document.getElementById('badge-punch').textContent = count3;
+            } catch (e) { document.getElementById('stat-punch').textContent = 'E'; }
+        }
+        
+        async function loadRFIs() {
+            if (!APP.currentProject) { document.getElementById('rfis-content').innerHTML = 'Selecciona proyecto.'; return; }
+            document.getElementById('rfis-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            try {
+                const data = await apiCall('rfis', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('rfis-content').innerHTML = 'No hay RFIs.'; return; }
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Asunto</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>';
+                data.forEach(r => { html += '<tr><td>' + (r.number||r.id) + '</td><td>' + (r.subject||'-') + '</td><td><span class="status-badge status-open">' + (r.status||'Abierto') + '</span></td><td>' + (r.created_at?.substring(0,10)||'-') + '</td></tr>'; });
+                html += '</tbody></table>';
+                document.getElementById('rfis-content').innerHTML = html;
+            } catch (e) { document.getElementById('rfis-content').innerHTML = 'Error: ' + e.message; }
+        }
+        
+        async function loadSubmittals() {
+            if (!APP.currentProject) { document.getElementById('submittals-content').innerHTML = 'Selecciona proyecto.'; return; }
+            document.getElementById('submittals-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            try {
+                const data = await apiCall('submittals', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('submittals-content').innerHTML = 'No hay Submittals.'; return; }
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Título</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>';
+                data.forEach(s => { html += '<tr><td>' + (s.number||s.id) + '</td><td>' + (s.title||'-') + '</td><td><span class="status-badge">' + (s.status?.name||'Pendiente') + '</span></td><td>' + (s.created_at?.substring(0,10)||'-') + '</td></tr>'; });
+                html += '</tbody></table>';
+                document.getElementById('submittals-content').innerHTML = html;
+            } catch (e) { document.getElementById('submittals-content').innerHTML = 'Error: ' + e.message; }
+        }
+        
+        async function loadPunchList() {
+            if (!APP.currentProject) { document.getElementById('punch-content').innerHTML = 'Selecciona proyecto.'; return; }
+            document.getElementById('punch-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+            try {
+                const data = await apiCall('punch-list', { project_id: APP.currentProject.id, company_id: APP.currentCompany.id });
+                if (!Array.isArray(data) || data.length === 0) { document.getElementById('punch-content').innerHTML = 'No hay Punch Items.'; return; }
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Descripción</th><th>Estado</th><th>Ubicación</th></tr></thead><tbody>';
+                data.forEach(p => { html += '<tr><td>' + (p.number||p.id) + '</td><td>' + (p.name||p.description||'-') + '</td><td><span class="status-badge status-open">' + (p.status||'Abierto') + '</span></td><td>' + (p.location?.name||'-') + '</td></tr>'; });
+                html += '</tbody></table>';
+                document.getElementById('punch-content').innerHTML = html;
+            } catch (e) { document.getElementById('punch-content').innerHTML = 'Error: ' + e.message; }
+        }
+    </script>
+</body>
+</html>
