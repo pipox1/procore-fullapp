@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "frontend/**", "use": "@vercel/static" },
-    { "src": "api/**/*.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/frontend/$1" }
+  "rewrites": [
+    { "source": "/api/auth/login", "destination": "/api/auth/login.js" },
+    { "source": "/api/auth/callback", "destination": "/api/auth/callback.js" },
+    { "source": "/api/me", "destination": "/api/me.js" },
+    { "source": "/api/companies", "destination": "/api/companies.js" },
+    { "source": "/api/projects", "destination": "/api/projects.js" },
+    { "source": "/api/rfis", "destination": "/api/rfis.js" },
+    { "source": "/api/submittals", "destination": "/api/submittals.js" },
+    { "source": "/api/punch-list", "destination": "/api/punch-list.js" },
+    { "source": "/(.*)", "destination": "/frontend/$1" }
   ]
 }
