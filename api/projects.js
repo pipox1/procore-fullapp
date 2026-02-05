@@ -3,16 +3,27 @@ const axios = require('axios');
 module.exports = async (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   const { company_id } = req.query;
-  
+
   if (!token) return res.status(401).json({ error: 'No token' });
-  
+  if (!company_id) return res.status(400).json({ error: 'company_id required' });
+
   try {
     const response = await axios.get(
-      `https://api.procore.com/rest/v1.0/companies/${company_id}/projects`,
-      { headers: { 'Authorization': `Bearer ${token}` } }
+      `https://api.procore.com/rest/v1.0/projects`,
+      { 
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Procore-Company-Id': company_id,
+          'Content-Type': 'application/json'
+        }
+      }
     );
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.message });
+    console.error('Projects error:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({ 
+      error: error.response?.data?.message || error.message,
+      details: error.response?.data
+    });
   }
 };
