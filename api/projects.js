@@ -8,9 +8,8 @@ module.exports = async (req, res) => {
   if (!company_id) return res.status(400).json({ error: 'company_id required' });
 
   try {
-    // Usar us02 para tu región
     const response = await axios.get(
-      'https://us02.api.procore.com/rest/v1.0/projects',
+      'https://api.procore.com/rest/v1.0/projects',
       { 
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -18,9 +17,11 @@ module.exports = async (req, res) => {
         }
       }
     );
+    console.log('Projects found:', response.data.length);
     res.json(response.data);
   } catch (error) {
-    console.error('Projects error:', error.response?.data || error.message);
+    console.error('Projects error status:', error.response?.status);
+    console.error('Projects error data:', JSON.stringify(error.response?.data));
     res.status(error.response?.status || 500).json({ 
       error: error.response?.data?.message || error.message,
       details: error.response?.data
