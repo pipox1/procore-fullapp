@@ -9,12 +9,11 @@ module.exports = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.procore.com/rest/v1.0/projects/${project_id}/rfis`,
+      `https://us02.api.procore.com/rest/v1.0/projects/${project_id}/rfis`,
       { 
         headers: { 
           'Authorization': `Bearer ${token}`,
-          'Procore-Company-Id': company_id,
-          'Content-Type': 'application/json'
+          'Procore-Company-Id': company_id
         }
       }
     );
@@ -22,8 +21,7 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error('RFIs error:', error.response?.data || error.message);
     res.status(error.response?.status || 500).json({ 
-      error: error.response?.data?.message || error.message,
-      details: error.response?.data
+      error: error.response?.data?.message || error.message
     });
   }
 };
