@@ -10,59 +10,79 @@
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter',sans-serif;background:#f5f7fa;min-height:100vh}
         
-        /* Login Screen */
         .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a1a2e,#16213e)}
         .login-container{text-align:center;padding:60px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:400px}
         .login-logo{width:80px;height:80px;background:linear-gradient(135deg,#F47E42,#E56A2E);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
         .login-logo i{font-size:36px;color:#fff}
         .login-container h1{font-size:28px;margin-bottom:12px;color:#2d3748}
         .login-container p{color:#718096;margin-bottom:32px}
-        .btn-login{display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:linear-gradient(135deg,#F47E42,#E56A2E);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:600;transition:all 0.3s;border:none;cursor:pointer}
-        .btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(244,126,66,0.4)}
+        .btn-login{display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:linear-gradient(135deg,#F47E42,#E56A2E);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:600}
         
-        /* Main App */
         .app-container{display:none;min-height:100vh}
         .app-container.active{display:flex}
         
-        /* Sidebar */
         .sidebar{width:260px;background:linear-gradient(180deg,#1a1a2e,#16213e);color:#fff;padding:20px;position:fixed;height:100vh;overflow-y:auto}
-        .sidebar-logo{display:flex;align-items:center;gap:12px;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+        .sidebar-logo{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1)}
         .sidebar-logo i{font-size:28px;color:#F47E42}
         .sidebar-logo span{font-size:20px;font-weight:700;color:#F47E42}
         
-        .user-info{background:rgba(255,255,255,0.05);padding:15px;border-radius:12px;margin-bottom:20px}
+        .user-info{background:rgba(255,255,255,0.05);padding:15px;border-radius:12px;margin-bottom:15px}
         .user-name{font-weight:600;font-size:14px;margin-bottom:4px}
         .user-email{font-size:12px;color:rgba(255,255,255,0.6)}
         
+        .project-select{margin-bottom:20px}
+        .project-select label{display:block;font-size:11px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px}
+        .project-select select{width:100%;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;font-size:13px}
+        .project-select select option{background:#1a1a2e;color:#fff}
+        
         .nav-section{margin-bottom:20px}
         .nav-title{font-size:11px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;padding-left:12px}
-        .nav-item{display:flex;align-items:center;gap:12px;padding:12px;color:rgba(255,255,255,0.8);text-decoration:none;border-radius:8px;margin-bottom:4px;transition:all 0.2s;cursor:pointer}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:12px;color:rgba(255,255,255,0.8);text-decoration:none;border-radius:8px;margin-bottom:4px;cursor:pointer}
         .nav-item:hover{background:rgba(244,126,66,0.2)}
         .nav-item.active{background:rgba(244,126,66,0.3);color:#F47E42}
         .nav-item i{width:20px;text-align:center}
+        .nav-item .badge{background:#F47E42;color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:auto}
         
-        .btn-logout{display:flex;align-items:center;gap:10px;width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:13px;margin-top:20px;transition:all 0.2s}
+        .btn-logout{display:flex;align-items:center;gap:10px;width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:13px;margin-top:20px}
         .btn-logout:hover{background:rgba(245,101,101,0.2);border-color:#f56565;color:#f56565}
         
-        /* Main Content */
         .main-content{margin-left:260px;padding:30px;flex:1}
-        .page-header{margin-bottom:30px}
+        .page-header{margin-bottom:30px;display:flex;justify-content:space-between;align-items:center}
         .page-header h1{font-size:28px;color:#2d3748;display:flex;align-items:center;gap:12px}
         .page-header h1 i{color:#F47E42}
+        .btn-refresh{padding:10px 20px;background:#F47E42;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:8px}
+        .btn-refresh:hover{background:#E56A2E}
         
         .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
-        .stat-card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-        .stat-card h3{font-size:32px;color:#2d3748;margin-bottom:8px}
+        .stat-card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);cursor:pointer;transition:all 0.2s}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+        .stat-card h3{font-size:36px;color:#2d3748;margin-bottom:8px}
         .stat-card p{color:#718096;font-size:14px}
         .stat-card.rfis{border-left:4px solid #F47E42}
         .stat-card.submittals{border-left:4px solid #4299e1}
         .stat-card.punch{border-left:4px solid #f56565}
         
         .data-section{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-        .data-section h2{font-size:18px;margin-bottom:20px;color:#2d3748}
+        .data-section h2{font-size:18px;margin-bottom:20px;color:#2d3748;display:flex;align-items:center;gap:10px}
+        .data-section h2 i{color:#F47E42}
+        
+        .data-table{width:100%;border-collapse:collapse}
+        .data-table th{text-align:left;padding:12px;background:#f5f7fa;font-size:12px;text-transform:uppercase;color:#718096;border-bottom:1px solid #e2e8f0}
+        .data-table td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:14px}
+        .data-table tr:hover{background:#f5f7fa}
+        
+        .status-badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
+        .status-open{background:#fed7d7;color:#c53030}
+        .status-closed{background:#c6f6d5;color:#276749}
+        .status-pending{background:#feebc8;color:#c05621}
+        
         .loading{text-align:center;padding:40px;color:#718096}
+        .loading i{font-size:24px;margin-bottom:10px}
         
         .hidden{display:none!important}
+        
+        .view{display:none}
+        .view.active{display:block}
     </style>
 </head>
 <body>
@@ -80,7 +100,6 @@
 
     <!-- Main App -->
     <div id="app-container" class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
                 <i class="fas fa-tools"></i>
@@ -92,21 +111,23 @@
                 <div class="user-email" id="user-email"></div>
             </div>
             
+            <div class="project-select">
+                <label>Proyecto</label>
+                <select id="project-select" onchange="selectProject(this.value)">
+                    <option value="">Seleccionar proyecto...</option>
+                </select>
+            </div>
+            
             <div class="nav-section">
-                <div class="nav-title">Core Tools</div>
-                <div class="nav-item active" data-tool="home"><i class="fas fa-home"></i> Home</div>
-                <div class="nav-item" data-tool="documents"><i class="fas fa-folder"></i> Documents</div>
-                <div class="nav-item" data-tool="directory"><i class="fas fa-address-book"></i> Directory</div>
+                <div class="nav-title">Dashboard</div>
+                <div class="nav-item active" onclick="showView('home')"><i class="fas fa-home"></i> Home</div>
             </div>
             
             <div class="nav-section">
                 <div class="nav-title">Project Management</div>
-                <div class="nav-item" data-tool="rfis"><i class="fas fa-question-circle"></i> RFIs</div>
-                <div class="nav-item" data-tool="submittals"><i class="fas fa-file-import"></i> Submittals</div>
-                <div class="nav-item" data-tool="punch"><i class="fas fa-list-check"></i> Punch List</div>
-                <div class="nav-item" data-tool="daily"><i class="fas fa-clipboard-list"></i> Daily Log</div>
-                <div class="nav-item" data-tool="photos"><i class="fas fa-camera"></i> Photos</div>
-                <div class="nav-item" data-tool="drawings"><i class="fas fa-drafting-compass"></i> Drawings</div>
+                <div class="nav-item" onclick="showView('rfis')"><i class="fas fa-question-circle"></i> RFIs <span class="badge" id="badge-rfis">0</span></div>
+                <div class="nav-item" onclick="showView('submittals')"><i class="fas fa-file-import"></i> Submittals <span class="badge" id="badge-submittals">0</span></div>
+                <div class="nav-item" onclick="showView('punch')"><i class="fas fa-list-check"></i> Punch List <span class="badge" id="badge-punch">0</span></div>
             </div>
             
             <button class="btn-logout" onclick="logout()">
@@ -114,58 +135,106 @@
             </button>
         </aside>
         
-        <!-- Main Content -->
         <main class="main-content">
-            <div class="page-header">
-                <h1><i class="fas fa-home"></i> Dashboard</h1>
+            <!-- Home View -->
+            <div id="view-home" class="view active">
+                <div class="page-header">
+                    <h1><i class="fas fa-home"></i> Dashboard</h1>
+                    <button class="btn-refresh" onclick="loadProjectData()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card rfis" onclick="showView('rfis')">
+                        <h3 id="stat-rfis">-</h3>
+                        <p><i class="fas fa-question-circle"></i> RFIs Abiertos</p>
+                    </div>
+                    <div class="stat-card submittals" onclick="showView('submittals')">
+                        <h3 id="stat-submittals">-</h3>
+                        <p><i class="fas fa-file-import"></i> Submittals</p>
+                    </div>
+                    <div class="stat-card punch" onclick="showView('punch')">
+                        <h3 id="stat-punch">-</h3>
+                        <p><i class="fas fa-list-check"></i> Punch Items</p>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h2><i class="fas fa-info-circle"></i> Información del Proyecto</h2>
+                    <p id="project-info">Selecciona un proyecto para ver los datos.</p>
+                </div>
             </div>
             
-            <div class="stats-grid">
-                <div class="stat-card rfis">
-                    <h3 id="stat-rfis">-</h3>
-                    <p>RFIs Abiertos</p>
+            <!-- RFIs View -->
+            <div id="view-rfis" class="view">
+                <div class="page-header">
+                    <h1><i class="fas fa-question-circle"></i> RFIs</h1>
+                    <button class="btn-refresh" onclick="loadRFIs()"><i class="fas fa-sync-alt"></i> Actualizar</button>
                 </div>
-                <div class="stat-card submittals">
-                    <h3 id="stat-submittals">-</h3>
-                    <p>Submittals Pendientes</p>
-                </div>
-                <div class="stat-card punch">
-                    <h3 id="stat-punch">-</h3>
-                    <p>Punch Items</p>
+                <div class="data-section">
+                    <div id="rfis-content" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando RFIs...</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="data-section">
-                <h2>Bienvenido a FLUTEC Quick Tools</h2>
-                <p>Selecciona una herramienta del menú lateral para comenzar.</p>
-                <p id="debug-info" style="margin-top:20px;font-size:12px;color:#999;"></p>
+            <!-- Submittals View -->
+            <div id="view-submittals" class="view">
+                <div class="page-header">
+                    <h1><i class="fas fa-file-import"></i> Submittals</h1>
+                    <button class="btn-refresh" onclick="loadSubmittals()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+                <div class="data-section">
+                    <div id="submittals-content" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando Submittals...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Punch List View -->
+            <div id="view-punch" class="view">
+                <div class="page-header">
+                    <h1><i class="fas fa-list-check"></i> Punch List</h1>
+                    <button class="btn-refresh" onclick="loadPunchList()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+                <div class="data-section">
+                    <div id="punch-content" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando Punch Items...</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Verificar autenticación al cargar
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-        });
+        let APP = {
+            token: null,
+            user: null,
+            companies: [],
+            projects: [],
+            currentCompany: null,
+            currentProject: null
+        };
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
         
         function checkAuth() {
-            // Buscar token en URL (después del callback de OAuth)
             const urlParams = new URLSearchParams(window.location.search);
             const tokenFromUrl = urlParams.get('token');
             
             if (tokenFromUrl) {
-                // Guardar token y limpiar URL
+                APP.token = tokenFromUrl;
                 localStorage.setItem('procore_token', tokenFromUrl);
-                window.history.replaceState({}, document.title, '/');
+                window.history.replaceState({}, document.title, window.location.pathname);
                 showApp();
-                loadUserData();
+                loadInitialData();
             } else {
-                // Verificar si ya hay token guardado
-                const savedToken = localStorage.getItem('procore_token');
-                if (savedToken) {
+                APP.token = localStorage.getItem('procore_token');
+                if (APP.token) {
                     showApp();
-                    loadUserData();
+                    loadInitialData();
                 } else {
                     showLogin();
                 }
@@ -173,52 +242,247 @@
         }
         
         function showLogin() {
-            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('app-container').classList.remove('active');
         }
         
         function showApp() {
-            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').classList.add('active');
         }
         
         function logout() {
             localStorage.removeItem('procore_token');
+            APP.token = null;
             showLogin();
         }
         
-        async function loadUserData() {
-            const token = localStorage.getItem('procore_token');
-            if (!token) return;
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
+            document.getElementById('view-' + viewName).classList.add('active');
+            event.target.closest('.nav-item')?.classList.add('active');
+            
+            if (viewName === 'rfis') loadRFIs();
+            if (viewName === 'submittals') loadSubmittals();
+            if (viewName === 'punch') loadPunchList();
+        }
+        
+        async function apiCall(endpoint, params = {}) {
+            const queryString = new URLSearchParams(params).toString();
+            const url = '/api/' + endpoint + (queryString ? '?' + queryString : '');
+            
+            const response = await fetch(url, {
+                headers: { 'Authorization': 'Bearer ' + APP.token }
+            });
+            
+            if (response.status === 401) {
+                logout();
+                throw new Error('Session expired');
+            }
+            
+            return response.json();
+        }
+        
+        async function loadInitialData() {
             try {
-                // Cargar datos del usuario
-                const response = await fetch('/api/me', {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
+                // Cargar usuario
+                APP.user = await apiCall('me');
+                document.getElementById('user-name').textContent = APP.user.name || 'Usuario';
+                document.getElementById('user-email').textContent = APP.user.login || '';
                 
-                if (response.ok) {
-                    const user = await response.json();
-                    document.getElementById('user-name').textContent = user.name || 'Usuario';
-                    document.getElementById('user-email').textContent = user.login || '';
-                    document.getElementById('debug-info').textContent = 'Conectado como: ' + (user.login || 'Usuario');
-                } else if (response.status === 401) {
-                    // Token expirado
-                    logout();
+                // Cargar compañías
+                APP.companies = await apiCall('companies');
+                
+                if (APP.companies.length > 0) {
+                    APP.currentCompany = APP.companies[0];
+                    await loadProjects();
                 }
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('debug-info').textContent = 'Error al cargar datos: ' + error.message;
             }
         }
         
-        // Navegación
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        async function loadProjects() {
+            try {
+                APP.projects = await apiCall('projects', { company_id: APP.currentCompany.id });
+                
+                const select = document.getElementById('project-select');
+                select.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+                
+                APP.projects.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.name;
+                    select.appendChild(option);
+                });
+                
+                // Auto-seleccionar si solo hay un proyecto
+                if (APP.projects.length === 1) {
+                    select.value = APP.projects[0].id;
+                    selectProject(APP.projects[0].id);
+                } else if (APP.projects.length > 0) {
+                    // O seleccionar el primero
+                    select.value = APP.projects[0].id;
+                    selectProject(APP.projects[0].id);
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+        
+        function selectProject(projectId) {
+            if (!projectId) return;
+            APP.currentProject = APP.projects.find(p => p.id == projectId);
+            document.getElementById('project-info').textContent = 
+                'Proyecto: ' + APP.currentProject.name + ' (ID: ' + APP.currentProject.id + ')';
+            loadProjectData();
+        }
+        
+        async function loadProjectData() {
+            if (!APP.currentProject) return;
+            
+            try {
+                // Cargar RFIs
+                const rfis = await apiCall('rfis', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                const rfiCount = Array.isArray(rfis) ? rfis.length : 0;
+                document.getElementById('stat-rfis').textContent = rfiCount;
+                document.getElementById('badge-rfis').textContent = rfiCount;
+                
+                // Cargar Submittals
+                const submittals = await apiCall('submittals', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                const subCount = Array.isArray(submittals) ? submittals.length : 0;
+                document.getElementById('stat-submittals').textContent = subCount;
+                document.getElementById('badge-submittals').textContent = subCount;
+                
+                // Cargar Punch List
+                const punchItems = await apiCall('punch-list', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                const punchCount = Array.isArray(punchItems) ? punchItems.length : 0;
+                document.getElementById('stat-punch').textContent = punchCount;
+                document.getElementById('badge-punch').textContent = punchCount;
+                
+            } catch (error) {
+                console.error('Error loading project data:', error);
+            }
+        }
+        
+        async function loadRFIs() {
+            if (!APP.currentProject) {
+                document.getElementById('rfis-content').innerHTML = '<p>Selecciona un proyecto primero.</p>';
+                return;
+            }
+            
+            document.getElementById('rfis-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
+            
+            try {
+                const rfis = await apiCall('rfis', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                
+                if (!Array.isArray(rfis) || rfis.length === 0) {
+                    document.getElementById('rfis-content').innerHTML = '<p>No hay RFIs en este proyecto.</p>';
+                    return;
+                }
+                
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Asunto</th><th>Estado</th><th>Creado</th></tr></thead><tbody>';
+                rfis.forEach(rfi => {
+                    html += '<tr>';
+                    html += '<td><strong>' + (rfi.number || rfi.id) + '</strong></td>';
+                    html += '<td>' + (rfi.subject || 'Sin asunto') + '</td>';
+                    html += '<td><span class="status-badge status-' + (rfi.status === 'closed' ? 'closed' : 'open') + '">' + (rfi.status || 'Abierto') + '</span></td>';
+                    html += '<td>' + (rfi.created_at ? new Date(rfi.created_at).toLocaleDateString() : '-') + '</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+                
+                document.getElementById('rfis-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('rfis-content').innerHTML = '<p>Error al cargar RFIs: ' + error.message + '</p>';
+            }
+        }
+        
+        async function loadSubmittals() {
+            if (!APP.currentProject) {
+                document.getElementById('submittals-content').innerHTML = '<p>Selecciona un proyecto primero.</p>';
+                return;
+            }
+            
+            document.getElementById('submittals-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
+            
+            try {
+                const submittals = await apiCall('submittals', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                
+                if (!Array.isArray(submittals) || submittals.length === 0) {
+                    document.getElementById('submittals-content').innerHTML = '<p>No hay Submittals en este proyecto.</p>';
+                    return;
+                }
+                
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Título</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>';
+                submittals.forEach(sub => {
+                    html += '<tr>';
+                    html += '<td><strong>' + (sub.number || sub.id) + '</strong></td>';
+                    html += '<td>' + (sub.title || 'Sin título') + '</td>';
+                    html += '<td><span class="status-badge status-pending">' + (sub.status?.name || 'Pendiente') + '</span></td>';
+                    html += '<td>' + (sub.created_at ? new Date(sub.created_at).toLocaleDateString() : '-') + '</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+                
+                document.getElementById('submittals-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('submittals-content').innerHTML = '<p>Error al cargar Submittals: ' + error.message + '</p>';
+            }
+        }
+        
+        async function loadPunchList() {
+            if (!APP.currentProject) {
+                document.getElementById('punch-content').innerHTML = '<p>Selecciona un proyecto primero.</p>';
+                return;
+            }
+            
+            document.getElementById('punch-content').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
+            
+            try {
+                const items = await apiCall('punch-list', { 
+                    project_id: APP.currentProject.id, 
+                    company_id: APP.currentCompany.id 
+                });
+                
+                if (!Array.isArray(items) || items.length === 0) {
+                    document.getElementById('punch-content').innerHTML = '<p>No hay Punch Items en este proyecto.</p>';
+                    return;
+                }
+                
+                let html = '<table class="data-table"><thead><tr><th>#</th><th>Descripción</th><th>Estado</th><th>Ubicación</th></tr></thead><tbody>';
+                items.forEach(item => {
+                    html += '<tr>';
+                    html += '<td><strong>' + (item.number || item.id) + '</strong></td>';
+                    html += '<td>' + (item.name || item.description || 'Sin descripción') + '</td>';
+                    html += '<td><span class="status-badge status-open">' + (item.status || 'Abierto') + '</span></td>';
+                    html += '<td>' + (item.location?.name || '-') + '</td>';
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+                
+                document.getElementById('punch-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('punch-content').innerHTML = '<p>Error al cargar Punch Items: ' + error.message + '</p>';
+            }
+        }
     </script>
 </body>
 </html>
