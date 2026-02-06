@@ -38,3 +38,5 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: 'Authentication failed', details: error.response?.data });
   }
 };
+
+
